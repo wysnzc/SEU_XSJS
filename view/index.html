@@ -106,7 +106,7 @@ function submitPaper(){
 	
 	
 	var xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("get","/submit_paper.php?ans="+ans_string,true);
+	xmlhttp.open("get","submit_paper.php?ans="+ans_string,true);
 	
 	xmlhttp.onreadystatechange=function(){
 		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -270,7 +270,7 @@ function gotoQ(qnum){
 function onExamRequest(){
 	setLayout('exam_loading');
 	var xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("get","/exam_content.php",true);
+	xmlhttp.open("get","exam_content.php",true);
 	
 	xmlhttp.onreadystatechange=function(){
 		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -334,7 +334,7 @@ function onLogoutSubmit(){
 	setLayout('login');
 	
 	var xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("post","/login_handler.php",true);
+	xmlhttp.open("post","login_handler.php",true);
 	
 	xmlhttp.onreadystatechange=function(){
 		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
@@ -353,7 +353,7 @@ function onLoginSubmit(){
 	//此处还需验证username和password
 	
 	var xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("post","/login_handler.php",true);
+	xmlhttp.open("post","login_handler.php",true);
 	
 	xmlhttp.onreadystatechange=function(){
 		//alert(xmlhttp.readyState+","+xmlhttp.status);
