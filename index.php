@@ -10,12 +10,8 @@ if($GLOBALS['resFlag']!='ok'){
     exit();
 }
 
-echo "<br>============debug==============<br>";
-
-$now=date("Y-m-d H:i:s");
-$stamp="2018-08-03 09:30:10";
-echo "[",(strtotime($now)-strtotime($stamp)),"]";
-
+echo "<br>==========php代码测试============<br>";
+//在这儿测试一些后端语句比较方便
 echo "<br>==============================<br>";
 
 
@@ -26,6 +22,6 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
     echo "<script>flag='not_login';</script>";
 }
 
-require './view/index.html';
+require 'view/index.html';
 
 ?>

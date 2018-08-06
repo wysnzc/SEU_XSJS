@@ -1,0 +1,79 @@
+<script>
+//此页面可以引用的后端变量:
+//php_department_id 管理员院系编号
+document.write('你好,'+php_department_id+'系管理员.');
+</script>
+
+<script>
+//变量声明
+var grades_data=[];
+</script>
+
+<script>
+function onRequestGrades(real=true){
+	var xmlhttp=new XMLHttpRequest();
+	xmlhttp.open("get","depa_info_request.php",true);
+	
+	xmlhttp.onreadystatechange=function(){
+		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+			var resObj=JSON.parse(xmlhttp.responseText);
+			if(resObj.flag=='ok'){
+				grades_data=resObj.gdata;
+				var table=produceTable(grades_data,'学号','分数');
+				document.getElementById('grade_table').innerHTML=table;
+				if(real){
+					alert('数据已更新!');
+				}
+				//alert(resObj.gdata);
+			}else{
+				alert(resObj.msg);
+			}
+		}
+	};
+	xmlhttp.send(null);
+}
+
+function produceTable(data){
+	//备注:data必须是个二维数组
+	//此函数具体用法参考被调用的地方
+	var rowCnt=data.length;
+	var colCnt=arguments.length-1;
+	var table='<table border="1"><tr>';
+	for(var i=0;i<colCnt;i++){
+		table+='<th>';
+		table+=arguments[i+1];
+		table+='</th>';
+	}
+	table+='</tr>';
+
+	for(i=0;i<rowCnt;i++){
+		table+='<tr>';
+		for(var j=0;j<colCnt;j++){
+			table+='<td>';
+			table+=data[i][j];
+			table+='</td>';
+		}
+		table+='</tr>';
+	}
+
+	table+='</table>';
+	return table;
+
+}
+
+</script>
+
+<body>
+
+<h1>院系管理员页面<h1>
+
+<div id='grade_table'>
+</div>
+
+<input type='button' value='刷新' onclick="onRequestGrades();">
+
+</body>
+
+<script>
+onRequestGrades(false);
+</script>
