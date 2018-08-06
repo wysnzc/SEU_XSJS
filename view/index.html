@@ -358,19 +358,19 @@ function onLoginSubmit(){
 	xmlhttp.onreadystatechange=function(){
 		//alert(xmlhttp.readyState+","+xmlhttp.status);
 		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-			var response=xmlhttp.responseText;
-			if(response==='ok'){
-				document.getElementById('prompt').innerHTML="登录成功!";
+			var resObj=JSON.parse(xmlhttp.responseText);
+			if(resObj['flag']=='ok'){
+
+				if(resObj['type']=='admin'){
+					window.location.assign('department.php');
+				}
+
+				document.getElementById('prompt').innerHTML=resObj['msg'];
 				setLayout('before_exam');
-			}else if(response==='fail'){
-				document.getElementById('prompt').innerHTML="登录失败,用户名或密码不正确!";
-				document.getElementById('login').children[2].disabled=false;
 			}else{
-				document.getElementById('prompt').innerHTML=response;
+				alert(resObj['msg']);
 				document.getElementById('login').children[2].disabled=false;
-				//alert("response:"+response);
 			}
-			
 		}
 	};
 	

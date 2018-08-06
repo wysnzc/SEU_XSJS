@@ -7,7 +7,41 @@ try {
         array(PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8"));
     
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //===================================================
+    //查xsjs_dbseed表,没有则创建
+    //这个表就一行一列,只记录一个版本信息
+    $v_new='0806';
+
+    $stmt=$conn->prepare("SELECT table_name FROM information_schema.tables
+                                            WHERE table_name='xsjs_dbseed'");
+    $stmt->execute();
+    $resCnt=$stmt->rowCount();
     
+    if($resCnt==0){
+        $stmt=$conn->prepare("CREATE TABLE xsjs_dbseed (version VARCHAR(20));
+                                INSERT INTO xsjs_dbseed (version) VALUES('none')");
+        $stmt->execute();
+    }
+
+    //查当前version
+    $stmt=$conn->prepare("SELECT version FROM xsjs_dbseed");
+    $stmt->execute();
+
+    $rows=$stmt->fetchAll();
+    $v_now=$rows[0][0];
+    if($v_now!=$v_new){
+        $stmt=$conn->prepare("UPDATE xsjs_dbseed SET version=:v;
+            DROP TABLE member;
+            DROP TABLE qdb_choice;
+            DROP TABLE qdb_judge;");
+        $stmt->bindValue(':v',$v_new);
+        $stmt->execute();
+        echo '【数据库已重置!!!】';
+    }
+
+
+
+
     //===================================================
     //查member表,没有则创建
     
@@ -52,7 +86,12 @@ try {
             array('213170013','06017040','06'),
             array('213170014','05017050','05'),
             array('213170015','05017060','05'),
-            array('213170016','05017070','05')
+            array('213170016','05017070','05'),
+            array('admin09','123456','09'),
+            array('admin08','123456','08'),
+            array('admin07','123456','07'),
+            array('admin06','123456','06'),
+            array('admin05','123456','05')
         );
         
         $mem_arr=$testusers;
