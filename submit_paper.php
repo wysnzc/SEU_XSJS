@@ -49,7 +49,12 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
             exit();
         }
         
-        if($rowCount==1 && $rows[0][0]==-1){
+        $db_score=$rows[0][0];
+        if($debug_mode){
+            $db_score=-1;
+        }
+
+        if($rowCount==1 && $db_score==-1){
             //算分
             $examKey=$_SESSION['exam_key'];
             $uAnswer=$_GET['ans'];
@@ -73,15 +78,19 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
                         //判断题
                         $score-=$conf_judge_score;
                     }
-                    array_push($wrongs, array('qnum'=>($i+1),'key'=>$examKey[$i]));
+                    array_push($wrongs, array($i+1,$examKey[$i]));
                 }
             }
             
             $response['flag']='ok';
             $response['score']=$score;
-            $response['msg']=$wrongs;
+            $response['wrongs']=$wrongs;
             echo json_encode($response);
             //向数据库写入分数
+            $stmt=$conn->prepare("UPDATE member SET score=:score WHERE username=:username");
+            $stmt->bindParam(':username', $exam_user);
+            $stmt->bindParam(':score',$score,PDO::PARAM_INT);
+            $stmt->execute();
             
         }else{
             $response['flag']='fail';

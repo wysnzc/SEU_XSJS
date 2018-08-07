@@ -5,7 +5,8 @@ $conf_choice_cnt=5;
 $conf_judge_cnt=4;
 $conf_choice_score=12;
 $conf_judge_score=10;
-$second_required_between_requests=180;
+$second_required_between_requests=20;
 $second_required_before_submit=30;
-$conf_time_limit=600+60;//60s是考虑网络延迟等原因的固定加时
+$conf_time_limit=60+60;//60s是考虑网络延迟等原因的固定加时
+$debug_mode=true;//开启debug_mode后可以反复做题,否则服务器会拒绝考试请求
 ?>

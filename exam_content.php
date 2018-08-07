@@ -36,6 +36,9 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
         
         require "exam_conf.php" ;
         
+        if($debug_mode){
+            $score=-1;
+        }
         
         if($rowCount==1 && $score==-1 && $timeDiff>=$second_required_between_requests){
             //开始抽题
