@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>校史校情知识竞赛2018</title>
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="js/json2.js"></script>
+	<![endif]-->
+    <script src="js/exam-helper.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+
+
+
+<div id="before_exam" style="display:none;">
+<div>
+	<span>登录名为</span>
+	<span id="before_exam_NAME"></span>
+	<span>的同学,你还没有完成考试,点击下面的按钮开始考试.</span>
+</div>
+<input type="button" value="开始考试(第一次)" onclick="onExamRequest();">
+</div>
+
+<div id="exam_loading" style="display:none;">试题加载中...</div>
+
+<div id="exam" style="display:none;">
+	<div>
+		<h3>
+		<div id="exam_TIME" style="display:none;">
+			<span>考试时间还剩</span>
+			<span id="exam_SECOND"></span>
+			<span>秒</span>
+		</div>
+		<div id="exam_TIME_OUT" style="display:none;">
+			考试结束,将自动提交试卷.
+		</div>
+		</h3>
+	</div>
+
+	<!--在exam-helper.js里搜索这些id,你将看到这些内容如何被js动态设置-->
+
+	<div id="q_title">题目</div>
+	<div id="q_choice" style="display:none;">
+		<div>问题</div> 
+		<div>
+		<input type="radio" value="A" name="exam_options"><span></span>
+		<input type="radio" value="B" name="exam_options"><span></span>
+		<input type="radio" value="C" name="exam_options"><span></span>
+		<input type="radio" value="D" name="exam_options"><span></span>
+		</div>
+	</div>
+	<div id="q_judge" style="display:none;">
+		<div>问题</div>
+		<div>
+		<input type="radio" value="T" name="exam_judge"><span>正确</span>
+		<input type="radio" value="F" name="exam_judge"><span>错误</span>
+		</div>
+	</div>
+	<input id="q_last" type="button" value="上一题">
+	<input id="q_next" type="button" value="下一题">
+</div>
+
+<!--exam finish是成功交卷后跳转的布局,大致内容是显示考试结果以及重置页面倒计时-->
+<div id="exam_finish" style="display:none;">
+	<div>
+		<span>考试结束,已自动注销,本页将于</span>
+		<span id="exam_finish_TIME"></span>
+		<span>秒后重置,重置后你将无法查看到错题信息.</span>
+	</div>
+	<h3>
+		<span>登录名为</span>
+		<span id="exam_finish_NAME"></span>
+		<span>的同学,你的分数是</span>
+		<span id="exam_finish_SCORE"></span>
+		<span>分.</span>
+		<div id="exam_finish_WRONGS">
+			<!--此处由js动态生成一个错题表,具体内容去exam-helper.js种搜索"exam_finish_WRONGS"-->
+		</div>
+	</h3>
+</div>
+
+</body>
+</html>

@@ -1,79 +1,33 @@
-<script>
-//此页面可以引用的后端变量:
-//php_department_id 管理员院系编号
-document.write('你好,'+php_department_id+'系管理员.');
-</script>
-
-<script>
-//变量声明
-var grades_data=[];
-</script>
-
-<script>
-function onRequestGrades(real=true){
-	var xmlhttp=new XMLHttpRequest();
-	xmlhttp.open("get","depa_info_request.php",true);
-	
-	xmlhttp.onreadystatechange=function(){
-		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-			var resObj=JSON.parse(xmlhttp.responseText);
-			if(resObj.flag=='ok'){
-				grades_data=resObj.gdata;
-				var table=produceTable(grades_data,'学号','分数');
-				document.getElementById('grade_table').innerHTML=table;
-				if(real){
-					alert('数据已更新!');
-				}
-				//alert(resObj.gdata);
-			}else{
-				alert(resObj.msg);
-			}
-		}
-	};
-	xmlhttp.send(null);
-}
-
-function produceTable(data){
-	//备注:data必须是个二维数组
-	//此函数具体用法参考被调用的地方
-	var rowCnt=data.length;
-	var colCnt=arguments.length-1;
-	var table='<table border="1"><tr>';
-	for(var i=0;i<colCnt;i++){
-		table+='<th>';
-		table+=arguments[i+1];
-		table+='</th>';
-	}
-	table+='</tr>';
-
-	for(i=0;i<rowCnt;i++){
-		table+='<tr>';
-		for(var j=0;j<colCnt;j++){
-			table+='<td>';
-			table+=data[i][j];
-			table+='</td>';
-		}
-		table+='</tr>';
-	}
-
-	table+='</table>';
-	return table;
-
-}
-
-</script>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>管理员-校史校情知识竞赛2018</title>
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="js/json2.js"></script>
+	<![endif]-->
+	<script src="js/jquery-form.js"></script>
+	<script src="js/department-helper.js" type="text/javascript" charset="utf-8"></script>
+	<link href="view/css.css" type="text/css" rel="stylesheet" />
+</head>
 <body>
 
-<h1>院系管理员页面<h1>
+	<h1>院系管理员页面</h1>
 
-<div id='grade_table'>
-</div>
+	<div>
+		<span>你好,</span>
+		<span id="admin_id"></span>
+		<span>系管理员.</span><br>
+		<input type="button" value="退出" onclick="onLogoutSubmit();">
+	</div>
 
-<input type='button' value='刷新' onclick="onRequestGrades();">
+	<div id='grade_table'>
+		<!--此处是js动态生成的成绩表格,去department-helper.js中搜索"grade_table"查看.-->
+	</div>
+
+	<input type='button' value='刷新' onclick="onRequestGrades();">
 
 </body>
-
-<script>
-onRequestGrades(false);
-</script>
+</html>
