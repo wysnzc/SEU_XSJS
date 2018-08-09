@@ -136,6 +136,15 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
             $response['flag']='ok';
             $response['msg']=$exam_data;
             
+            if(isset($_SESSION['exam_key'])&&!empty($_SESSION['exam_key'])){
+                $response['flag']='fail';
+                $_SESSION = array();
+                setcookie(session_name(), '', time() - 42000);
+                $response['msg']='系统异常!请刷新页面重新登录并考试.(提示:不要同时开启多个考试页面!)';
+                echo json_encode($response);
+                exit();
+            }
+
             $_SESSION['exam_key']=$exam_key;
             //echo "//<br>答案:",$_SESSION['exam_key'];
             

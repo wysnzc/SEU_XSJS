@@ -10,7 +10,7 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user'])){
     //已登录
     if(!isset($_SESSION['exam_key']) || empty($_SESSION['exam_key'])){
         $response['flag']='fail';
-        $response['msg']='试卷提交失败!错误信息:该账户尚未申请考试,请刷新页面重新考试.';
+        $response['msg']='系统异常!请刷新页面重新开始考试!(提示:考试过程中不要再开启新页面多次申请考试.)';
         echo json_encode($response);
         exit();
     }

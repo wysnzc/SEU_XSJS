@@ -19,15 +19,23 @@
 	<div>
 		<span>你好,</span>
 		<span id="admin_id"></span>
-		<span>系管理员.</span><br>
+		<span>系管理员.</span>
 		<input type="button" value="退出" onclick="onLogoutSubmit();">
 	</div>
-
-	<div id='grade_table'>
-		<!--此处是js动态生成的成绩表格,去department-helper.js中搜索"grade_table"查看.-->
+	<input type='button' value='刷新数据' onclick="onRequestGrades();">
+	<div>
+		<h3>本院系数据(数据即时更新)</h3>
+		<div id='grade_table'>
+			<!--此处是js动态生成的成绩表格,去department-helper.js中搜索"grade_table"查看.-->
+		</div>
 	</div>
-
-	<input type='button' value='刷新' onclick="onRequestGrades();">
+	
+	<div>
+		<h3>其他院系数据(数据每分钟更新一次)</h3>
+		<div id='stat_table'>
+		</div>
+	</div>
+	
 
 </body>
 </html>

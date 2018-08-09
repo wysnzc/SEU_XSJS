@@ -16,11 +16,14 @@ function onRequestGrades(real){
 		if(xmlhttp.readyState === 4 && xmlhttp.status === 200) {
 			var resObj=JSON.parse(xmlhttp.responseText);
 			if(resObj.flag=='ok'){
-				grades_data=resObj.gdata;
-				var table=produceTable(grades_data,'学号','分数');
-				document.getElementById('grade_table').innerHTML=table;
+				grades_data=resObj['gdata'];
+				stat_data=resObj['stat'];
+				var table1=produceTable(grades_data,'学号','分数');
+				document.getElementById('grade_table').innerHTML=table1;
+				var table2=produceTable(stat_data,'院系','平均分','完成人数比例(%)');
+				document.getElementById('stat_table').innerHTML=table2;
 				if(real){
-					alert('数据已更新!');
+					alert('已从服务器获取最新数据!');
 				}
 				//alert(resObj.gdata);
 			}else{

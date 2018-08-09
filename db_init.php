@@ -10,7 +10,7 @@ try {
     //===================================================
     //查xsjs_dbseed表,没有则创建
     //这个表就一行一列,只记录一个版本信息
-    $v_new='0806';
+    $v_new='0809_1';
 
     $stmt=$conn->prepare("SELECT table_name FROM information_schema.tables
                                             WHERE table_name='xsjs_dbseed'");
@@ -32,6 +32,7 @@ try {
     if($v_now!=$v_new){
         $stmt=$conn->prepare("UPDATE xsjs_dbseed SET version=:v;
             DROP TABLE member;
+            DROP TABLE department;
             DROP TABLE qdb_choice;
             DROP TABLE qdb_judge;");
         $stmt->bindValue(':v',$v_new);
@@ -99,6 +100,36 @@ try {
             $username=$mem_arr[$x][0];
             $password=$mem_arr[$x][1];
             $department=$mem_arr[$x][2];
+            $stmt->execute();
+        }
+    }
+
+    //===================================================
+    //查department表,没有则创建
+    
+    $stmt=$conn->prepare("SELECT table_name FROM information_schema.tables
+                                            WHERE table_name='department'");
+    $stmt->execute();
+    $resCnt=$stmt->rowCount();
+    
+    if($resCnt==0){
+        //未创建department表
+        $stmt=$conn->prepare("CREATE TABLE department (
+            id VARCHAR(3) NOT NULL,
+            update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            average DOUBLE(5,2) DEFAULT 0,
+            rate DOUBLE(5,2) DEFAULT 0,
+            PRIMARY KEY(id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+        $stmt->execute();
+
+        //根据member表初始化department表
+        $stmt=$conn->prepare("SELECT DISTINCT department_id FROM member;");
+        $stmt->execute();
+        $rows=$stmt->fetchAll();
+        $stmt=$conn->prepare("INSERT INTO department (id) VALUES(:id);");
+        foreach ($rows as $key => $value) {
+            $stmt->bindValue(':id',$value['department_id']);
             $stmt->execute();
         }
     }

@@ -21,6 +21,7 @@ echo json_encode($response);
 function getDataFromDepartment($depa_id){
 	global $response;
 	$response['gdata']=array();
+    $response['stat']=array();
 	require 'database_keys/testdb0802.php';
     try {
         $conn=new PDO("mysql:host=$servername;dbname=$database",$db_username,$db_password);
@@ -39,14 +40,62 @@ function getDataFromDepartment($depa_id){
         foreach ($rows as $key => $value) {
         	$response['gdata'][$key]=array($value['password'],$value['score']);
         }
+
+        //===========================下面查所有院系整体数据=======================
+
+        $stmt=$conn->prepare("SELECT update_time FROM department LIMIT 0,1;");
+        $stmt->execute();
+        $rows=$stmt->fetchAll();
+
+        $lastTS=$rows[0]['update_time'];
+        $nowTS=date("Y-m-d H:i:s");
+
+        $timeDiff=strtotime($nowTS)-strtotime($lastTS);
+
+        if($timeDiff>60){
+            //更新department表
+            $stmt=$conn->prepare("SELECT department_id,
+                count(*)-1 AS total,
+                SUM(if(score!=-1,1,0)) AS done,
+                SUM(if(score!=-1,score,0)) AS total_score 
+                FROM member GROUP BY department_id;");
+            $stmt->execute();
+            $rows=$stmt->fetchAll();
+
+            $stmt=$conn->prepare("DELETE FROM department;");
+            $stmt->execute();
+            $stmt=$conn->prepare("INSERT INTO department (id,update_time,average,rate) VALUES(:id,:utime,:av,:rate);");
+            foreach ($rows as $key => $value) {
+                $stmt->bindValue(':id',$value['department_id']);
+                $stmt->bindValue(':utime',$nowTS);
+                $stmt->bindValue(':av',
+                    $value['done']==0?0:
+                    $value['total_score']/$value['done']);
+                $stmt->bindValue(':rate',
+                    $value['total']==0?0:
+                    ($value['done']/$value['total'])*100);
+                $stmt->execute();
+            }
+        }
+
+        //=========查department表并返回
+        $stmt=$conn->prepare("SELECT id,average,rate FROM department;");
+        $stmt->execute();
+        $rows=$stmt->fetchAll();
+
+        foreach ($rows as $key => $value) {
+            $response['stat'][$key]=array($value['id'],$value['average'],$value['rate']);
+        }
+
+
         $response['flag']='ok';
+        $conn=null;
     }
     catch(PDOException $ex){
     	global $response;
         $response['flag']='fail';
         $response['msg']=$ex->getMessage();
     }
-    $conn=null;
 }
 
 ?>
